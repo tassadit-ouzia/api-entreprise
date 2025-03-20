@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Entreprises</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- Affichage du nom de l'utilisateur connecté -->
+        {% if current_user.is_authenticated %}
+            <div class="alert alert-info text-center">
+                <strong>Bienvenue, {{ current_user.username }} !</strong>
+                <a href="/logout" class="btn btn-warning btn-sm ml-3">Se déconnecter</a>
+            </div>
+        {% else %}
+            <a href="/login" class="btn btn-primary btn-sm mb-3">Se connecter</a>
+        {% endif %}
+
+        <h1 class="text-center">Gestion des Entreprises</h1>
+
+        <!-- Formulaire d'ajout d'une entreprise -->
+        <h2 class="mt-4">Ajouter une Entreprise</h2>
+        <form action="/ajouter" method="POST">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Raison Sociale</label>
+                    <input type="text" class="form-control" name="raison_sociale" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nom du Dirigeant</label>
+                    <input type="text" class="form-control" name="nom_dirigeant" required>
+                </div>
+
+                <!-- Adresse -->
+                <h3>Adresse</h3>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Numéro et Rue</label>
+                    <input type="text" class="form-control" name="numero_rue">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Code Postal</label>
+                    <input type="text" class="form-control" name="code_postal">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Ville</label>
+                    <input type="text" class="form-control" name="ville">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Pays</label>
+                    <input type="text" class="form-control" name="pays">
+                </div>
+
+                <!-- Services Proposés -->
+                <h3>Services Proposés</h3>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Sélectionner un service</label>
+                    <select class="form-control" name="service" id="service" required>
+                        <option value="" disabled selected>-- Sélectionner un service --</option>
+                        <option value="accueil_vip">Accueil personnalisé & expérience client VIP</option>
+                        <option value="assistance_administrative">Aide aux démarches administratives</option>
+                        <option value="assistance_juridique">Assistance juridique & fiscale</option>
+                        <option value="evenements_vip">Accès VIP à des événements exclusifs</option>
+                        <option value="beaute_mode">Accompagnement beauté et mode</option>
+                        <option value="spas_bien_etre">Accès aux meilleurs spas & centres de bien-être</option>
+                        <option value="conciergerie_auto">Conciergerie automobile (lavage, révision, contrôle technique, réparation)</option> 
+                        <option value="degustation_vins">Expériences œnologiques et dégustations de vins rares</option>
+                        <option value="experiences_privees">Excursions privées & expériences sur-mesure</option>
+                        <option value="femme_entretien">Femme d'entretien</option>
+                        <option value="hebergement_prestige">Hébergement de prestige</option>
+                        <option value="location_voitures_velos">Location de voitures & vélos électriques</option>
+                        <option value="location_yacht_jet">Location de yachts et jets privés</option>
+                        <option value="organisation_anniversaire">Organisation d’anniversaires et événements privés</option>
+                        <option value="sejours_entreprise">Organisation de séjours d’entreprise</option>
+                        <option value="team_building">Organisation d’activités team-building</option>
+                        <option value="soirees_privees">Planification de soirées privées</option>
+                        <option value="pressing">Pressing & blanchisserie (récupération et livraison)</option>
+                        <option value="vols_trains_luxe">Réservation de vols privés et trains de luxe</option>
+                        <option value="voyages_affaires">Réservation de billets pour voyages d’affaires</option>
+                        <option value="reparations_entretien">Réparations & entretien (plomberie, électricité, dépannage rapide)</option>
+                        <option value="chef_traiteur">Service de chef à domicile & traiteur gastronomique</option>
+                        <option value="chauffeur_prive">Service de chauffeur privé avec véhicule de luxe</option>
+                        <option value="nettoyage_blanchisserie">Service de nettoyage & blanchisserie haut de gamme</option>
+                        <option value="personal_shopper">Service de personal shopper</option>
+                        <option value="transferts_prives">Transferts privés (aéroports, hôtels, événements)</option>
+                        <option value="autre">Autre</option> <!-- Option Autre -->
+                    </select>
+                </div>
+
+                <!-- Champ pour entrer un service personnalisé -->
+                <div class="col-md-12 mb-3" id="autre_service" style="display:none;">
+                    <label for="autre_service_input" class="form-label">Entrez un autre service</label>
+                    <input type="text" class="form-control" id="autre_service_input" name="autre_service" placeholder="Nom du service personnalisé">
+                </div>
+
+                <!-- Contact -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Téléphone</label>
+                    <input type="text" class="form-control" name="telephone" required>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" name="description" required></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Ajouter l'entreprise</button>
+        </form>
+
+        <!-- Liste des entreprises -->
+        <h2 class="mt-5">Liste des entreprises</h2>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Raison Sociale</th>
+                    <th>Nom Dirigeant</th>
+                    <th>Numéro et Rue</th>
+                    <th>Code Postal</th>
+                    <th>Ville</th>
+                    <th>Pays</th>
+                    <th>Téléphone</th>
+                    <th>Service</th>
+                    <th>Email</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entreprise in entreprises %}
+                <tr>
+                    <td>{{ entreprise[0] }}</td>
+                    <td>{{ entreprise[1] }}</td>
+                    <td>{{ entreprise[2] }}</td>
+                    <td>{{ entreprise[3] }}</td>
+                    <td>{{ entreprise[4] }}</td>
+                    <td>{{ entreprise[5] }}</td>
+                    <td>{{ entreprise[6] }}</td>
+                    <td>{{ entreprise[9] }}</td>
+                    <td>{{ entreprise[7] }}</td>
+                    <td>{{ entreprise[8] }}</td>
+                    <td>{{ entreprise[10] }}</td>
+                    <td>
+                        <form action="/supprimer/{{ entreprise[0] }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer cette entreprise ?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Script Bootstrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script pour afficher le champ "Autre" -->
+    <script>
+        document.getElementById('service').addEventListener('change', function () {
+            var autreServiceField = document.getElementById('autre_service');
+            if (this.value == 'autre') {
+                autreServiceField.style.display = 'block'; // Afficher le champ si "Autre" est sélectionné
+            } else {
+                autreServiceField.style.display = 'none'; // Cacher si une autre option est sélectionnée
+            }
+        });
+    </script>
+
+</body>
+</html>
