@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, flash, url_for
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user, logout_user
 import psycopg2
 import bcrypt
+import os  # Import pour utiliser les variables d'environnement
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # Nécessaire pour utiliser `flash`
@@ -14,12 +15,11 @@ login_manager.login_view = "login"  # Page de connexion si non authentifié
 # Fonction pour se connecter à la base de données PostgreSQL
 def get_db_connection():
     try:
-        conn = psycopg2.connect(
-            host='localhost',       # Hôte de PostgreSQL
-            database='stage_db',    # Nom de la base de données déjà existante
-            user='postgres',        # Utilisateur PostgreSQL (par défaut 'postgres')
-            password='Zaazitassadit13-'  # Mot de passe PostgreSQL (remplace-le par le tien)
-        )
+        # Récupérer les informations de connexion depuis les variables d'environnement ou directement à partir de l'URL PostgreSQL de Render
+        db_url = os.getenv("DATABASE_URL", "postgresql://stage_db_62gn_user:1KyqqNY8KhgjGC7ukZpzZaNEhtrD8KZv@dpg-cvdveffnoe9s73ej7qhg-a.oregon-postgres.render.com/stage_db_62gn")
+        
+        # Connexion à PostgreSQL
+        conn = psycopg2.connect(db_url)
         return conn
     except psycopg2.Error as err:
         print(f"❌ Erreur de connexion à la base de données : {err}")

@@ -9,8 +9,7 @@ CREATE TABLE IF NOT EXISTS public.users
     CONSTRAINT users_username_key UNIQUE (username)
 );
 
-ALTER TABLE IF EXISTS public.users
-    OWNER to postgres;
+
 
 -- Table: public.entreprises
 
@@ -30,5 +29,3 @@ CREATE TABLE IF NOT EXISTS public.entreprises
     CONSTRAINT entreprises_pkey PRIMARY KEY (id)
 );
 
-ALTER TABLE IF EXISTS public.entreprises
-    OWNER to postgres;
